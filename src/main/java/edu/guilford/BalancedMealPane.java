@@ -296,6 +296,8 @@ public class BalancedMealPane extends GridPane {
             proteinLabel.setText("Protein: " + proteinTextField.getText());
             
             BalancedMeal bm = this.balancedMeals.get(currentBalancedMeal); // create a new balanced meal
+            MealName newMealName = balancedMealNameField(); // create a new meal name
+            bm.setMealName(newMealName); // set the meal name to the text in the text field
             bm.setFruits(Integer.parseInt(fruitsTextField.getText())); // set the fruits, grains, protein, and vegetables
             bm.setGrains(Integer.parseInt(grainsTextField.getText())); // to the text in the text fields
             bm.setProtein(Integer.parseInt(proteinTextField.getText())); 
@@ -307,7 +309,9 @@ public class BalancedMealPane extends GridPane {
     }
 
     private MealName balancedMealNameField() {
-        String mealName = mealNameTextField.getText();
-        return new MealName();
+        String mealName[] = mealNameTextField.getText().split(" with ");
+        String mainDish = mealName[0];
+        String sideDish = mealName[1];
+        return new MealName(mainDish, sideDish);
     }
-}
+    }
