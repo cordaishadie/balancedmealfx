@@ -32,7 +32,6 @@ public class BalancedMealPane extends GridPane {
     private TextField grainsTextField;
     private TextField proteinTextField;
 
-    private
     private Button calculateButton;
     private Label healthLabel;
 
@@ -98,9 +97,6 @@ public class BalancedMealPane extends GridPane {
         // instantiate the decrease rating button
         decreaseRating = new Button("(-) rating");
 
-        balancedMeals = new LinkedList<BalancedMeal>();
-        balancedMeals.add(balancedMeal);
-
         // instantiate the cook time label
         cookTimeLabel = new Label("How long did it take to cook?");
         // instantiate the cook time text field
@@ -114,8 +110,8 @@ public class BalancedMealPane extends GridPane {
         // instantiate the previous and next buttons
         previousButton = new Button("Previous");
         nextButton = new Button("Next");
-        previousButton.setDisable(false);
-        nextButton.setDisable(true);    
+        previousButton.setDisable(true);
+        nextButton.setDisable(false);    
 
         /* separation between instantiating and adding */
 
@@ -167,16 +163,29 @@ public class BalancedMealPane extends GridPane {
         // add an event handler to the button
         calculateButton.setOnAction(event -> {
             try {
-                // Create a new BalancedMeal object with the text field values
+            setLabels();
+            } catch (BlankTextException e) {
+                healthLabel.setStyle("-fx-text-fill: red");
+                healthLabel.setText("Please fill in all the text fields!");
+            } catch (NumberFormatException e) {
+                healthLabel.setStyle("-fx-text-fill: red");
+                healthLabel.setText("Please enter a number for the component text fields!");
 
-                BalancedMeal newBalancedMeal = new BalancedMeal(balancedMealNameField(), Integer.parseInt(vegetablesTextField.getText()), Integer.parseInt(fruitsTextField.getText()), Integer.parseInt(grainsTextField.getText()), Integer.parseInt(proteinTextField.getText()));
-                mealNameLabel.setText("Meal Name: " + newBalancedMeal.getMealName());
-                vegetablesLabel.setText("Vegetables: " + newBalancedMeal.getVegetables());
-                fruitsLabel.setText("Fruits: " + newBalancedMeal.getFruits());
-                grainsLabel.setText("Grains: " + newBalancedMeal.getGrains());
-                proteinLabel.setText("Protein: " + newBalancedMeal.getProtein());
+            BalancedMeal newBalancedMeal = new BalancedMeal(balancedMealNameField(), Integer.parseInt(vegetablesTextField.getText()), 
+                Integer.parseInt(fruitsTextField.getText()), Integer.parseInt(grainsTextField.getText()), 
+                Integer.parseInt(proteinTextField.getText()));    
+            
+            this.balancedMeals.add(newBalancedMeal);
 
+            currentBalancedMeal = this.balancedMeals.size() - 1;
 
+            mealNameLabel.setText("Meal Name: " + newBalancedMeal.getMealName());
+            vegetablesLabel.setText("Vegetables: " + newBalancedMeal.getVegetables());
+            fruitsLabel.setText("Fruits: " + newBalancedMeal.getFruits());
+            grainsLabel.setText("Grains: " + newBalancedMeal.getGrains());
+            proteinLabel.setText("Protein: " + newBalancedMeal.getProtein());
+                
+            }
             
         });
 
@@ -228,7 +237,7 @@ public class BalancedMealPane extends GridPane {
                     currentBalancedMeal = 0;
                 }
             }
-            nextButton.setDisable(currentBalancedMeal >= this.balancedMeals.size() -1);
+            nextButton.setDisable(currentBalancedMeal >= this.balancedMeals.size() - 1);
             previousButton.setDisable(currentBalancedMeal < 1);
             // update the labels
             BalancedMeal bm = this.balancedMeals.get(currentBalancedMeal);
@@ -274,23 +283,25 @@ public class BalancedMealPane extends GridPane {
 
     public void setLabels() throws BlankTextException {
         // if any of the text fields are blank, throw a BlankTextException
-        if (mealNameTextField.getText().equals("") || vegetablesTextField.getText().equals("") || fruitsTextField.getText().equals("") || grainsTextField.getText().equals("") || proteinTextField.getText().equals("")) {
+        if (mealNameTextField.getText().equals("") || vegetablesTextField.getText().equals("")
+                || fruitsTextField.getText().equals("") || grainsTextField.getText().equals("")
+                || proteinTextField.getText().equals("")) {
             throw new BlankTextException("Blank Text Exception");
         } else {
             // set the labels to the text in the text fields
-            BalancedMeal current = this.balancedMeals.get(currentBalancedMeal);
             mealNameLabel.setText("Meal Name: " + mealNameTextField.getText());
             vegetablesLabel.setText("Vegetables: " + vegetablesTextField.getText());
             fruitsLabel.setText("Fruits: " + fruitsTextField.getText());
             grainsLabel.setText("Grains: " + grainsTextField.getText());
             proteinLabel.setText("Protein: " + proteinTextField.getText());
-
-            current.setFruits(Integer.parseInt(fruitsTextField.getText()));
-            current.setGrains(Integer.parseInt(grainsTextField.getText()));
-            current.setProtein(Integer.parseInt(proteinTextField.getText()));
-            current.setVegetables(Integer.parseInt(vegetablesTextField.getText()));
-            healthLabel.setText("Healthiness: " + current.healthScore());
-            balancedMeals.add(current);
+            
+            BalancedMeal bm = this.balancedMeals.get(currentBalancedMeal); // create a new balanced meal
+            bm.setFruits(Integer.parseInt(fruitsTextField.getText())); // set the fruits, grains, protein, and vegetables
+            bm.setGrains(Integer.parseInt(grainsTextField.getText())); // to the text in the text fields
+            bm.setProtein(Integer.parseInt(proteinTextField.getText())); 
+            bm.setVegetables(Integer.parseInt(vegetablesTextField.getText()));
+            healthLabel.setText("Healthiness: " + bm.healthScore());
+            this.balancedMeals.add(bm);
             System.out.println(balancedMeals);
         }
     }
