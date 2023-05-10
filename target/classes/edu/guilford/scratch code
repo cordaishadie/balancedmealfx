@@ -1,0 +1,384 @@
+package edu.guilford;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+
+public class BalancedMealPane extends GridPane {
+    // attributes for the BalancedMealPane class
+    private BalancedMeal balancedMeals;
+
+    private Label vegetableLabel;
+    private Label fruitLabel;
+    private Label grainLabel;
+    private Label proteinLabel;
+
+    private TextField vegetableField;
+    private TextField fruitField;
+    private TextField grainField;
+    private TextField protienField;
+
+    private Button calculateButton;
+
+    private Button enterButton;
+
+    private Label ratingLabel;
+    // Step 1: Instantiate the slider
+    private Slider ratingSlider;
+    private Button increaseRating;
+    private Button decreaseRating;
+
+    private ImageView imageView;
+
+    private Button increaseFont;
+    private Button decreaseFont;
+
+    private ComboBox viewComboBox;
+
+   
+    
+
+    private Label healthLabel;
+
+    private Label errorLabel;
+
+    private ComboBox mealTypeComboBox;
+
+    private Label cookTimeLabel;
+    private TextField cookTimeField;
+    private Label priceLabel;
+    private TextField priceField;
+
+    private Button saveButton;
+
+    // constructor for the MealPane class that takes in a Meal object
+    public BalancedMealPane(BalancedMeal balancedMeal) {
+        this.balancedMeals = balancedMeals;
+
+        // instantiate the labels
+        vegetableLabel = new Label("Vegetables: ");
+        fruitLabel = new Label("Fruits: ");
+        grainLabel = new Label("Grains: ");
+        proteinLabel = new Label("Protein: ");
+
+        // instantiate the text fields
+        vegetableField = new TextField();
+        fruitField = new TextField();
+        grainField = new TextField();
+        protienField = new TextField();
+
+        calculateButton = new Button("Calculate Health Score!");
+        // instantiate the total label
+        healthLabel = new Label("Health Score: ");
+        // instantiate the button
+
+        enterButton = new Button("Enter");
+
+        // instantiate the rating label and slider
+        ratingLabel = new Label("What would you rate your meal?");
+        // Step 2: Instantiate the slider with length of 10, starting at 0, and starting at 5
+        ratingSlider = new Slider(0, 10, 5);
+        // add the tick marks to the slider
+        ratingSlider.setShowTickMarks(true);
+        // increase the size of the rating slider
+        ratingSlider.setPrefWidth(300);
+        // instatiate the buttons
+        increaseRating = new Button("+");
+        decreaseRating = new Button("-");
+        // create a File object for the image
+        File rateFace = new File(this.getClass().getResource("Shadie_Yummy_Bitmoji.png").getPath());
+        // instantiate the image view
+        imageView = new ImageView(rateFace.toURI().toString());
+        // change the size of the image
+        imageView.setFitHeight(200);
+        // and keep the aspect ratio
+        imageView.setPreserveRatio(true);
+
+        // instantiate the buttons
+        increaseFont = new Button("+ Font");
+        decreaseFont = new Button("- Font");
+
+        // instantiate the combo box
+        viewComboBox = new ComboBox();
+        // add the options to the combo box
+        viewComboBox.getItems().addAll("Light Mode", "Dark Mode");
+        // set the default value of the combo box
+        viewComboBox.setValue("Light Mode");
+
+        
+
+        // instantiate the error label
+        errorLabel = new Label();
+
+        // instantiate the meal type combo box
+        mealTypeComboBox = new ComboBox();
+        mealTypeComboBox.getItems().addAll("In", "Out");
+        mealTypeComboBox.setValue("Are you eating in or out?");
+
+        // instantiate the cook time label and text field
+        cookTimeLabel = new Label("Cook Time: ");
+        cookTimeField = new TextField();
+
+        // instantiate the price label and text field
+        priceLabel = new Label("Price: ");
+        priceField = new TextField();
+
+        // instantiate the save button
+        saveButton = new Button("Save");
+
+        // add the labels, text fields, and button to the pane
+        add(vegetableLabel, 0, 0);
+        add(vegetableField, 1, 0);
+        add(fruitLabel, 0, 1);
+        add(fruitField, 1, 1);
+        add(grainLabel, 0, 2);
+        add(grainField, 1, 2);
+        add(proteinLabel, 0, 3);
+        add(protienField, 1, 3);
+        
+        add(calculateButton, 0, 4);
+        add(healthLabel, 1, 4);
+
+        // leave a blank row after the button
+        add(new Label(), 0, 7);
+
+        // add the font buttons
+        add(increaseFont, 0, 8);
+        add(decreaseFont, 1, 8);
+
+        // leave a blank row afteter the font buttons
+        add(new Label(), 0, 9);
+
+        // add the rating label and slider
+        add(ratingLabel, 0, 10);
+        // Step 3: Add the slider to the pane
+        add(ratingSlider, 2, 10);
+        add(increaseRating, 1, 10);
+        add(decreaseRating, 3, 10);
+
+        // add the image view underneath the rating label and slider
+        add(imageView, 0, 11, 2, 1);
+
+        // leave 2 blank rows after the image view
+        add(new Label(), 0, 12);
+        add(new Label(), 0, 13);
+
+        // add the combo box
+        add(viewComboBox, 0, 14, 2, 1);
+
+        // leave a blank space between the text fields and the price text fields
+        add(new Label(), 2, 3);
+
+        // add the meal type combo box
+        add(mealTypeComboBox, 0, 5);
+
+        // add the cook time label and text field
+        add(cookTimeLabel, 0, 6);
+        add(cookTimeField, 1, 6);
+        add(priceLabel, 0, 7);
+        add(priceField, 1, 7);
+
+        add (saveButton, 3, 14);
+
+        // implement a try catch blcok to make sure user only enters text in the text
+        // fields
+        calculateButton.setOnAction(e -> {
+            try {
+                setLabels();
+            } catch (BlankTextException ex) {
+                healthLabel.setStyle("-fx-text-fill: red;");
+                healthLabel.setText("Please enter text in all fields!");
+            } 
+            try {
+                charcterLimit();
+            } catch (TooManyCharactersException ex) {
+                healthLabel.setStyle("-fx-text-fill: red;");
+                healthLabel.setText("Please enter less than 20 characters!");
+            }
+
+        });
+
+        // step 4 and 5: Write an event listener and connect it to the component that
+        // triggers the event
+        // (add an event handler for the slider that changes the size of the image
+        // based on the value of the slider)
+        ratingSlider.setOnMouseReleased(e -> {
+            imageView.setFitHeight(ratingSlider.getValue() * 40);
+        });
+
+        // add a listener for the increase font button
+        increaseFont.setOnAction(e -> {
+            try {
+                increaseFontSize();
+            } catch (FontSizeException ex) {
+                errorLabel.setStyle("-fx-text-fill: red;");
+                errorLabel.setText("Font size cannot be greater than 25!");
+            }
+        });
+
+        // add a listener for the decrease font button
+        decreaseFont.setOnAction(e -> {
+            // add a try catch block to make sure the font size doesn't go below 6
+            try {
+                decreaseFontSize();
+            } catch (FontSizeException ex) {
+                errorLabel.setStyle("-fx-text-fill: red;");
+                errorLabel.setText("Font size cannot be less than 6!");
+            }
+        });
+
+        // add a listener for the combo box that changes the background color of the
+        // pane
+        viewComboBox.setOnAction(e -> {
+            if (viewComboBox.getValue().equals("Light Mode")) {
+                setStyle("-fx-background-color: white;");
+            } else {
+                setStyle("-fx-background-color: black;");
+                // and change the color of the labels
+                vegetableLabel.setStyle("-fx-text-fill: white;");
+                fruitLabel.setStyle("-fx-text-fill: white;");
+                grainLabel.setStyle("-fx-text-fill: white;");
+                proteinLabel.setStyle("-fx-text-fill: white;");
+                ratingLabel.setStyle("-fx-text-fill: white;");
+                // totalLabel.setStyle("-fx-text-fill: white;");
+            }
+        });
+
+        calculateButton.setOnAction(e -> {
+            double score = 0;
+            // if text is not blank set the total to the sum of the text fields
+            try {
+                if (!vegetableField.getText().isBlank() && !fruitField.getText().isBlank()
+                        && !grainField.getText().isBlank() && !protienField.getText().isBlank()) {
+                    // score the meal using the healthScore() method from the BalancedDiet class
+                    double vegetableAmt = Double.parseDouble(vegetableField.getText());
+                    double fruitAmt = Double.parseDouble(fruitField.getText());
+                    double grainAmt = Double.parseDouble(grainField.getText());
+                    double proteinAmt = Double.parseDouble(protienField.getText());
+                    score = BalancedMeal.healthScore(vegetableAmt, fruitAmt, grainAmt, proteinAmt);
+            }
+            healthLabel.setText("Health Score: " + score);
+            } catch (NumberFormatException ex) {
+                errorLabel.setStyle("-fx-text-fill: red;");
+                errorLabel.setText("Please enter a number in all fields!");
+            }
+        }); 
+       
+        // add a listener for the meal type combo box
+        // if in is selected don't show the cook time text field
+        mealTypeComboBox.setOnAction(e -> {
+            if (mealTypeComboBox.getValue().equals("In")) {
+                cookTimeLabel.setVisible(true);
+                cookTimeField.setVisible(true);
+                priceLabel.setVisible(false);
+                priceField.setVisible(false);
+            } else {
+                cookTimeLabel.setVisible(false);
+                cookTimeField.setVisible(false);
+                priceLabel.setVisible(true);
+                priceField.setVisible(true);
+            }
+        });
+
+        // add an event listener increase rating button
+        increaseRating.setOnAction(e -> {
+                ratingSlider.setValue(ratingSlider.getValue() + 1);
+        });
+
+        // add an event listener for the decrease rating button
+        decreaseRating.setOnAction(e -> {
+                ratingSlider.setValue(ratingSlider.getValue() - 1);
+        });
+
+        // add an event listener for the save button
+        saveButton.setOnAction(e -> {
+            
+        });
+    }
+
+    public static class BlankTextException extends Exception {
+        public BlankTextException(String message) {
+            super("Blank Text Exception");
+        }
+    }
+
+    public static class FontSizeException extends Exception {
+        public FontSizeException(String message, Throwable err) {
+            super("Font Size Exception", err);
+        }
+    }
+
+    public static class TooManyCharactersException extends Exception {
+        public TooManyCharactersException(String message, Throwable err) {
+            super("Too Many Characters Exception", err);
+        }
+    }
+
+    private void setLabels() throws BlankTextException {
+        // if all the labels are blank, throw the blank text exception
+        if (vegetableField.getText().equals("") && fruitField.getText().equals("")
+                && grainField.getText().equals("") && priceField.getText().equals("")) {
+            throw new BlankTextException("Please enter text in the text fields!");
+        } else {
+            // set the label text to the text in the text fields
+            vegetableLabel.setText("Vegetables: " + vegetableField.getText());
+            fruitLabel.setText("Fruits: " + fruitField.getText());
+            grainLabel.setText("Grains: " + grainField.getText());
+            proteinLabel.setText("Proteins: " + protienField.getText());
+            
+        }
+    }
+
+    private void increaseFontSize() throws FontSizeException {
+        // if the font size is greater than 25, throw the font size exception
+        if (vegetableLabel.getFont().getSize() > 25 || fruitLabel.getFont().getSize() > 25
+                || grainLabel.getFont().getSize() > 25 || proteinLabel.getFont().getSize() > 25) {
+            throw new FontSizeException("Font size cannot be greater than 30!", null);
+        } else {
+            // set the font size of the labels to the font size of the labels plus 1
+            vegetableLabel.setStyle("-fx-font-size: " + (vegetableLabel.getFont().getSize() + 1) + "px;");
+            fruitLabel.setStyle("-fx-font-size: " + (fruitLabel.getFont().getSize() + 1) + "px;");
+            grainLabel.setStyle("-fx-font-size: " + (grainLabel.getFont().getSize() + 1) + "px;");
+            proteinLabel.setStyle("-fx-font-size: " + (proteinLabel.getFont().getSize() + 1) + "px;");
+        }
+    }
+
+    private void decreaseFontSize() throws FontSizeException {
+        // if the font size is less than 6, throw the font size exception
+        if (vegetableLabel.getFont().getSize() < 6 || fruitLabel.getFont().getSize() < 6
+                || grainLabel.getFont().getSize() < 6 || proteinLabel.getFont().getSize() < 6) {
+            throw new FontSizeException("Font size cannot be less than 6!", null);
+        } else {
+            // set the font size of the labels to the font size of the labels minus 1
+            vegetableLabel.setStyle("-fx-font-size: " + (vegetableLabel.getFont().getSize() - 1) + "px;");
+            fruitLabel.setStyle("-fx-font-size: " + (fruitLabel.getFont().getSize() - 1) + "px;");
+            grainLabel.setStyle("-fx-font-size: " + (grainLabel.getFont().getSize() - 1) + "px;");
+            proteinLabel.setStyle("-fx-font-size: " + (proteinLabel.getFont().getSize() - 1) + "px;");
+        }
+    }
+
+    private void charcterLimit() throws TooManyCharactersException {
+        // if the text in the text fields is greater than 20 characters, throw the too
+        // many characters exception
+        if (vegetableField.getText().length() > 20 || fruitField.getText().length() > 20
+                || grainField.getText().length() > 20 || protienField.getText().length() > 20) {
+            throw new TooManyCharactersException("Too many characters!", null);
+        } else {
+            // set the label text to the text in the text fields
+            vegetableLabel.setText("Vegetables: " + vegetableField.getText());
+            fruitLabel.setText("Fruits: " + fruitField.getText());
+            grainLabel.setText("Grains: " + grainField.getText());
+            proteinLabel.setText("Protein: " + protienField.getText());
+        }
+    }
+
+}
