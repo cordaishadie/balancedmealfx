@@ -13,6 +13,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
+/*
+ * This class represents the BalancedMeal Pane.
+ * Author: Cordai Shadie
+ * Course: CTIS 310
+ * Final Project
+ */
 public class BalancedMealPane extends GridPane {
     private LinkedList<BalancedMeal> balancedMeals;
     private BalancedMeal balancedMeal;
@@ -50,6 +56,10 @@ public class BalancedMealPane extends GridPane {
     private Button previousButton;
     private Button nextButton;
 
+    /*
+     * This method is the constructor for the BalancedMealPane.
+     * @param balancedMeals the balanced meals 
+     */
     public BalancedMealPane(LinkedList<BalancedMeal> balancedMeals) {
         // everything in the BalancedMealPane is going to in this constructor
         this.balancedMeals = balancedMeals;
@@ -262,25 +272,41 @@ public class BalancedMealPane extends GridPane {
     }
 
     // this is where I'll create exceptions and extra methods
-
+    
+    /**
+     * This method returns the name of the balanced meal
+     * @return the name of the balanced meal
+     */
     public static class BlankTextException extends Exception {
         public BlankTextException(String message) {
             super("Blank Text Exception");
         }
     }
 
+    /*
+     * This method returns the name of the balanced meal
+     * @return the name of the balanced meal
+     */
     public static class FontSizeException extends Exception {
         public FontSizeException(String message, Throwable err) {
             super("Font Size Exception", err);
         }
     }
 
+    /*
+     * This method returns the name of the balanced meal
+     * @return the name of the balanced meal
+     */
     public static class TooManyCharactersException extends Exception {
         public TooManyCharactersException(String message, Throwable err) {
             super("Too Many Characters Exception", err);
         }
     }
 
+    /*
+     * This method returns the name of the balanced meal
+     * @return the name of the balanced meal
+     */
     public void setLabels() throws BlankTextException {
         // if any of the text fields are blank, throw a BlankTextException
         if (mealNameTextField.getText().equals("") || vegetablesTextField.getText().equals("")
@@ -308,8 +334,12 @@ public class BalancedMealPane extends GridPane {
         }
     }
 
+    /*
+     * This method returns the name of the balanced meal
+     * @return the name of the balanced meal
+     */
     private MealName balancedMealNameField() {
-        String mealName[] = mealNameTextField.getText().split(" with ");
+        String mealName[] = mealNameTextField.getText().split(" ");
         String mainDish = mealName[0];
         String sideDish = mealName[1];
         return new MealName(mainDish, sideDish);

@@ -12,14 +12,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-/**
- * JavaFX App
+/*
+ * This class the JavaFX Application.
+ * Author: Cordai Shadie
+ * Course: CTIS 310
+ * Final Project
  */
 public class BalancedMealFX extends Application {
 
     private static Scene scene;
 
     @Override
+    /*
+     * This method starts the JavaFX Application.
+     * @param stage the stage
+     * @throws IOException if an I/O error occurs
+     */
     public void start(Stage stage) throws IOException {
         VBox root = new VBox();
 
