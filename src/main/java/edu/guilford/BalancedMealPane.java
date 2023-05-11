@@ -339,7 +339,7 @@ public class BalancedMealPane extends GridPane {
      * @return the name of the balanced meal
      */
     private MealName balancedMealNameField() {
-        String mealName[] = mealNameTextField.getText().split(" ");
+        String mealName[] = mealNameTextField.getText().split(" with ");
         String mainDish = mealName[0];
         String sideDish = mealName[1];
         return new MealName(mainDish, sideDish);
